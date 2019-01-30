@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Stopwatch } from 'react-native-stopwatch-timer';
+import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class CounterItem extends React.Component {
@@ -17,6 +17,7 @@ export default class CounterItem extends React.Component {
         this.getFormattedTime = this.getFormattedTime.bind(this);
         this.toggleCounter = this.toggleCounter.bind(this);
         this.resetCounter = this.resetCounter.bind(this);
+        this.triggerAlarm = this.triggerAlarm.bind(this);
     }
 
     getFormattedTime(time) {
@@ -32,7 +33,30 @@ export default class CounterItem extends React.Component {
         this.setState({ startCounter: false, resetCounter: true });
     }
 
+    triggerAlarm() {
+        
+    }
+
     render() {
+
+        let timer = null;
+        if (this.props.totalDuration !== undefined) {
+            timer = <Timer msecs start={this.state.startCounter}
+                reset={this.state.resetCounter}
+                options={options}
+                getTime={this.getFormattedTime}
+                totalDuration={this.props.totalDuration}
+                handleFinish={this.triggerAlarm}
+            />
+        }
+        else {
+            timer = <Stopwatch msecs start={this.state.startCounter}
+                reset={this.state.resetCounter}
+                options={options}
+                getTime={this.getFormattedTime}
+            />
+        }
+
         return (
             <View style={styles.counterContainer}>
                 <View style={styles.mainInfoContainer}>
@@ -41,15 +65,11 @@ export default class CounterItem extends React.Component {
                         onEndEditing={() => this.setState({ editTitle: false })}
                         onChangeText={(text) => this.setState({ title: text })}
                     />
-                    <Stopwatch start={this.state.startCounter}
-                        reset={this.state.resetCounter}
-                        options={options}
-                        getTime={this.getFormattedTime}
-                    />
+                    {timer}
                 </View>
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity onPress={this.toggleCounter} style={[styles.counterButton, styles.startButton]}>
-                        <Icon name="play" color="white" size={28} />
+                        <Icon name="play" color="white" size={25} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.resetCounter} style={[styles.counterButton, styles.resetButton]}>
                         <Icon name="stop" color="white" size={14} />
@@ -79,7 +99,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
     },
     mainInfoContainer: {
-        flex: 6,
+        flex: 7,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -93,20 +113,20 @@ const styles = StyleSheet.create({
     startButton: {
         backgroundColor: 'green',
         flex: 2,
-        width: 100,
-        height: 65,
+        width: 80,
+        height: 60,
     },
     resetButton: {
         backgroundColor: 'orange',
         flex: 1,
         width: 100,
-        height: 35,
+        height: 30,
     },
     deleteButton: {
         backgroundColor: 'red',
         flex: 1,
         width: 100,
-        height: 35,
+        height: 30,
     },
     counterButton: {
         borderWidth: 1,
@@ -133,7 +153,7 @@ const options = {
         width: 160
     },
     text: {
-        fontSize: 25,
+        fontSize: 21,
         color: '#FFF',
         marginLeft: 7,
         textAlign: 'center'

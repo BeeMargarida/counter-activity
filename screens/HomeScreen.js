@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { WebBrowser } from 'expo';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import CounterItem from '../components/CounterItem';
 
@@ -16,7 +17,7 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state= {
+    this.state = {
       counters: []
     };
 
@@ -45,14 +46,16 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.tabBarInfoContainer}>
-          <Button onPress={this.addNewCounter} title="New Counter"/>
+          <TouchableOpacity onPress={this.addNewCounter} style={styles.tabBarInfoButton}>
+            <Icon name="plus" color="black" size={28} />
+          </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <CounterItem counterId={0} title="Counter 1" deleteCounter={this.deleteCounter} setCurrentTime={this.setCurrentTime}/>
+          <CounterItem counterId={0} title="Counter 1" deleteCounter={this.deleteCounter} setCurrentTime={this.setCurrentTime} />
         </ScrollView>
 
-        
+
       </View>
     );
   }
@@ -124,9 +127,20 @@ const styles = StyleSheet.create({
       },
     }),
     alignItems: 'flex-end',
-    backgroundColor: '#fbfbfb',
+    //backgroundColor: '#fbfbfb',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
+  },
+  tabBarInfoButton: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 100,
+    marginHorizontal: 2,
+    width: 50,
+    height: 50,
   },
   tabBarInfoText: {
     fontSize: 17,
