@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  AsyncStorage
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,43 +19,73 @@ export default class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      counters: []
+      counters: [],
+      previousIdCounter: 0
     };
+
+    //this._retrieveData();
 
     this.addNewCounter = this.addNewCounter.bind(this);
     this.deleteCounter = this.deleteCounter.bind(this);
-    this.setCurrentTime = this.setCurrentTime.bind(this);
   }
 
   static navigationOptions = {
     header: null,
   };
 
-  addNewCounter() {
+  //TODO: Make function that saves timers periodically in the LocalStorage
 
+  addNewCounter() {
+    this.setState(prevState => ({ counters: [...prevState.counters, {counterId: prevState.previousIdCounter}], previousIdCounter: prevState.previousIdCounter + 1 }));
+    //this._storeData();
   }
 
   deleteCounter(counterId) {
-
+    let newCounters = this.state.counters.filter(item => item.counterId !== counterId);
+    this.setState({counters: newCounters});
+    //this._storeData();
   }
 
-  setCurrentTime(counterId) {
+  _storeData = async () => {
+    try {
+      await AsyncStorage.multiSet(['@Counters:counters', JSON.stringify(this.state.counters),'@Counters:counterID', this.state.previousIdCounter]);
+    } catch (error) {
+      //TODO: Show error message
 
-  }
+    }
+  };
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.multiGet(['@Counters:counters','@Counters:counterID']);
+      if (value !== null) {
+        this.setState({counters: JSON.parse(value[0][1]), previousIdCounter: value[1][1]});
+        console.log(JSON.parse(value));
+      }
+    } catch (error) {
+      //TODO: Show error message
+      
+    }
+  };
+
 
   render() {
+
+    let counters = this.state.counters.map(item =>
+      <CounterItem key={item.counterId} counterId={item.counterId} deleteCounter={this.deleteCounter} />
+    );
+    
     return (
       <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          {counters}
+        </ScrollView>
+
         <View style={styles.tabBarInfoContainer}>
           <TouchableOpacity onPress={this.addNewCounter} style={styles.tabBarInfoButton}>
             <Icon name="plus" color="black" size={28} />
           </TouchableOpacity>
         </View>
-
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <CounterItem counterId={0} title="Counter 1" deleteCounter={this.deleteCounter} setCurrentTime={this.setCurrentTime} />
-        </ScrollView>
-
 
       </View>
     );
@@ -76,39 +107,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -146,19 +144,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
   },
 });

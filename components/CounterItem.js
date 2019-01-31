@@ -9,7 +9,7 @@ export default class CounterItem extends React.Component {
         super(props);
 
         this.state = {
-            title: this.props.title,
+            title: "New Counter " + this.props.counterId,
             startCounter: false,
             resetCounter: false,
         }
@@ -22,7 +22,6 @@ export default class CounterItem extends React.Component {
 
     getFormattedTime(time) {
         this.currentTime = time;
-        this.props.setCurrentTime(this.currentTime);
     };
 
     toggleCounter() {
@@ -34,12 +33,16 @@ export default class CounterItem extends React.Component {
     }
 
     triggerAlarm() {
-        
+
     }
 
     render() {
 
-        let timer = null;
+        let timer = <Stopwatch msecs start={this.state.startCounter}
+            reset={this.state.resetCounter}
+            options={options}
+            getTime={this.getFormattedTime}
+        />;
         if (this.props.totalDuration !== undefined) {
             timer = <Timer msecs start={this.state.startCounter}
                 reset={this.state.resetCounter}
@@ -49,12 +52,10 @@ export default class CounterItem extends React.Component {
                 handleFinish={this.triggerAlarm}
             />
         }
-        else {
-            timer = <Stopwatch msecs start={this.state.startCounter}
-                reset={this.state.resetCounter}
-                options={options}
-                getTime={this.getFormattedTime}
-            />
+
+        let mainIcon = <Icon name="play" color="white" size={25} />;
+        if (this.state.startCounter) {
+            mainIcon = <Icon name="pause" color="white" size={25} />;
         }
 
         return (
@@ -69,7 +70,7 @@ export default class CounterItem extends React.Component {
                 </View>
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity onPress={this.toggleCounter} style={[styles.counterButton, styles.startButton]}>
-                        <Icon name="play" color="white" size={25} />
+                        {mainIcon}
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.resetCounter} style={[styles.counterButton, styles.resetButton]}>
                         <Icon name="stop" color="white" size={14} />
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
         shadowColor: "grey",
         shadowOpacity: 0.5,
         shadowRadius: 10,
+        height: 125,
     },
     mainInfoContainer: {
         flex: 7,
