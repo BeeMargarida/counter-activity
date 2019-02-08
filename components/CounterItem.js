@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import Timer from './Timer';
+import TimerWithDeadline from './TimerWithDeadline';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class CounterItem extends React.Component {
@@ -33,18 +34,20 @@ export default class CounterItem extends React.Component {
     }
 
     triggerAlarm() {
-
+        alert("Timer Ended!");
     }
 
     render() {
 
-        let timer = <Stopwatch msecs start={this.state.startCounter}
+        let timer = <Timer
+            start={this.state.startCounter}
             reset={this.state.resetCounter}
             options={options}
             getTime={this.getFormattedTime}
         />;
         if (this.props.totalDuration !== undefined) {
-            timer = <Timer msecs start={this.state.startCounter}
+            timer = <TimerWithDeadline
+                start={this.state.startCounter}
                 reset={this.state.resetCounter}
                 options={options}
                 getTime={this.getFormattedTime}
