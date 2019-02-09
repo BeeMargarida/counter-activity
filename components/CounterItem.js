@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Timer from './Timer';
 import TimerWithDeadline from './TimerWithDeadline';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,8 +9,10 @@ export default class CounterItem extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(props.totalDuration);
+
         this.state = {
-            title: "New Counter " + this.props.counterId,
+            title: props.name || "New Counter " + props.counterId,
             startCounter: false,
             resetCounter: false,
         }

@@ -13,6 +13,7 @@ import { WebBrowser } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import CounterItem from '../components/CounterItem';
+import NewTimerForm from '../components/NewTimerForm';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -20,13 +21,15 @@ export default class HomeScreen extends React.Component {
 
     this.state = {
       counters: [],
-      previousIdCounter: 0
+      previousIdCounter: 0,
+      showNewTimerForm: false
     };
 
     //this._retrieveData();
 
     this.addNewCounter = this.addNewCounter.bind(this);
     this.deleteCounter = this.deleteCounter.bind(this);
+    this.toggleForm = this.toggleForm.bind(this);
   }
 
   static navigationOptions = {
@@ -35,9 +38,13 @@ export default class HomeScreen extends React.Component {
 
   //TODO: Make function that saves timers periodically in the LocalStorage
 
-  addNewCounter() {
-    this.setState(prevState => ({ counters: [...prevState.counters, {counterId: prevState.previousIdCounter}], previousIdCounter: prevState.previousIdCounter + 1 }));
+  addNewCounter(name, totalDuration) {
+    this.setState(prevState => ({ counters: [...prevState.counters, {counterId: prevState.previousIdCounter, name: name, totalDuration: totalDuration}], previousIdCounter: prevState.previousIdCounter + 1 }));
     //this._storeData();
+  }
+
+  toggleForm() {
+    this.setState(prevState => ({ showNewTimerForm: !prevState.showNewTimerForm}));
   }
 
   deleteCounter(counterId) {
@@ -72,7 +79,7 @@ export default class HomeScreen extends React.Component {
   render() {
 
     let counters = this.state.counters.map(item =>
-      <CounterItem key={item.counterId} counterId={item.counterId} deleteCounter={this.deleteCounter} />
+      <CounterItem key={item.counterId} {...item} deleteCounter={this.deleteCounter} />
     );
     
     return (
@@ -82,10 +89,11 @@ export default class HomeScreen extends React.Component {
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
-          <TouchableOpacity onPress={this.addNewCounter} style={styles.tabBarInfoButton}>
+          <TouchableOpacity onPress={this.toggleForm} style={styles.tabBarInfoButton}>
             <Icon name="plus" color="black" size={28} />
           </TouchableOpacity>
         </View>
+        {this.state.showNewTimerForm ? (<NewTimerForm addNewCounter={this.addNewCounter} cancelForm={this.toggleForm} />) : null}
 
       </View>
     );
