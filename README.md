@@ -5,7 +5,7 @@ Developed in React Native, it consists of a simple project to consolidate my exp
 
 Here are some screenshots of the application: 
 
-<div align="center">
-    ![Counters](images/counters.png)
-    ![Add Counter](images/add_counter.png)
-</div>
+<p align="center">
+    <img src="https://github.com/BeeMargarida/counter-activity/blob/master/images/counters.png" />
+    <img src="https://github.com/BeeMargarida/counter-activity/blob/master/images/add_counter.png" />
+</p>
