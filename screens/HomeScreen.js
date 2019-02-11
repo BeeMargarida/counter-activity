@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
       },
     }),
     alignItems: 'flex-end',
-    //backgroundColor: '#fbfbfb',
     paddingVertical: 10,
     paddingHorizontal: 10,
   },

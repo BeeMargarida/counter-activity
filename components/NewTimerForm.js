@@ -25,7 +25,7 @@ export default class NewTimerForm extends React.Component {
     createNewTimer = (isTimer) => {
         if (isTimer) {
             let { hoursInput, minutesInput, secondsInput } = this.state;
-            if (parseInt(minutesInput) > 60 || parseInt(secondsInput) > 60) {
+            if (parseInt(minutesInput) > 60 || parseInt(secondsInput) > 60 || (parseInt(hoursInput) == 0 && parseInt(minutesInput) == 0 && parseInt(secondsInput) == 0)) {
 
                 Alert.alert("Total Duration input is invalid", "Please insert a valid time.", [{ text: 'Ok' }]);
                 return;
