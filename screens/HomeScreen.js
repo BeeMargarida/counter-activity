@@ -1,15 +1,12 @@
 import React from 'react';
 import {
-  Button,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
-  AsyncStorage
+  Alert
 } from 'react-native';
-import { WebBrowser } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import CounterItem from '../components/CounterItem';
@@ -25,8 +22,6 @@ export default class HomeScreen extends React.Component {
       showNewTimerForm: false
     };
 
-    //this._retrieveData();
-
     this.addNewCounter = this.addNewCounter.bind(this);
     this.deleteCounter = this.deleteCounter.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
@@ -36,44 +31,21 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
-  //TODO: Make function that saves timers periodically in the LocalStorage
-
   addNewCounter(name, totalDuration) {
     this.setState(prevState => ({ counters: [...prevState.counters, {counterId: prevState.previousIdCounter, name: name, totalDuration: totalDuration}], previousIdCounter: prevState.previousIdCounter + 1 }));
-    //this._storeData();
   }
 
   toggleForm() {
+    if(!this.state.showNewTimerForm && this.state.counters >= 5) {
+      Alert.alert("Maximum Capacity Reached!", "This application only supports 5 timers at once.", [{text: "Ok"}]);
+    } 
     this.setState(prevState => ({ showNewTimerForm: !prevState.showNewTimerForm}));
   }
 
   deleteCounter(counterId) {
     let newCounters = this.state.counters.filter(item => item.counterId !== counterId);
     this.setState({counters: newCounters});
-    //this._storeData();
   }
-
-  _storeData = async () => {
-    try {
-      await AsyncStorage.multiSet(['@Counters:counters', JSON.stringify(this.state.counters),'@Counters:counterID', this.state.previousIdCounter]);
-    } catch (error) {
-      //TODO: Show error message
-
-    }
-  };
-
-  _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.multiGet(['@Counters:counters','@Counters:counterID']);
-      if (value !== null) {
-        this.setState({counters: JSON.parse(value[0][1]), previousIdCounter: value[1][1]});
-        console.log(JSON.parse(value));
-      }
-    } catch (error) {
-      //TODO: Show error message
-      
-    }
-  };
 
 
   render() {

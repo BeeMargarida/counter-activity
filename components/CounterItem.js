@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Timer from './Timer';
 import TimerWithDeadline from './TimerWithDeadline';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,8 +8,6 @@ export default class CounterItem extends React.Component {
 
     constructor(props) {
         super(props);
-
-        console.log(props.totalDuration);
 
         this.state = {
             title: props.name || "New Counter " + props.counterId,
@@ -36,7 +34,7 @@ export default class CounterItem extends React.Component {
     }
 
     triggerAlarm() {
-        alert("Timer Ended!");
+        Alert.alert(`Timer ${this.state.title} has ended!`, [{text: "Ok"}]);
     }
 
     render() {
@@ -44,14 +42,12 @@ export default class CounterItem extends React.Component {
         let timer = <Timer
             start={this.state.startCounter}
             reset={this.state.resetCounter}
-            options={options}
             getTime={this.getFormattedTime}
         />;
         if (this.props.totalDuration !== undefined) {
             timer = <TimerWithDeadline
                 start={this.state.startCounter}
                 reset={this.state.resetCounter}
-                options={options}
                 getTime={this.getFormattedTime}
                 totalDuration={this.props.totalDuration}
                 handleFinish={this.triggerAlarm}
@@ -151,18 +147,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
-const options = {
-    container: {
-        backgroundColor: '#000',
-        padding: 5,
-        borderRadius: 5,
-        width: 160
-    },
-    text: {
-        fontSize: 21,
-        color: '#FFF',
-        marginLeft: 7,
-        textAlign: 'center'
-    }
-};
