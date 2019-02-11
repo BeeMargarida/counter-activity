@@ -22,8 +22,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.beemargarida.counteractivity"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.beemargarida.counteractivity"
     }
   }
 }
